@@ -1,0 +1,79 @@
+---
+# .pre-commit-config.yaml
+#
+# Covers: Snakefile + *.smk, shell scripts (.sh), Python (.py, integration
+#         tests only), Markdown, YAML, conda envs, project-wide version
+#         policy.
+#
+# Prerequisites:
+#   System : python3, uv, pre-commit, snakemake (>=8), snakefmt,
+#            graphviz (dot), conda/mamba, shellcheck, shfmt, bats-core
+#
+# Usage:
+#   pre-commit install --install-hooks
+#   pre-commit run --all-files
+
+repos:
+
+  # ── Common file-quality gates ──────────────────────────────────────────────
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-merge-conflict
+      - id: check-case-conflict
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: mixed-line-ending
+      - id: check-added-large-files
+      - id: detect-private-key
+      - id: check-executables-have-shebangs
+        files: '\.sh$'
+      - id: check-shebang-scripts-are-executable
+        files: '\.sh$'
+
+  # ── Git hygiene + shell-specific quality ───────────────────────────────────
+  - repo: https://github.com/jumanjihouse/pre-commit-hooks
+    rev: 3.0.0
+    hooks:
+      - id: forbid-binary
+      - id: git-check
+      - id: shellcheck
+        exclude: '(^|/)\.envrc$'
+      - id: shfmt
+        exclude: '(^|/)\.envrc$'
+
+  # ── Markdown linting ────────────────────────────────────────────────────────
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.44.0
+    hooks:
+      - id: markdownlint
+        exclude: '(^|/)\.tests/'
+
+  # ── YAML linting ────────────────────────────────────────────────────────────
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: v1.38.0
+    hooks:
+      - id: yamllint
+        args: [--strict]
+
+  # ── Snakemake format ────────────────────────────────────────────────────────
+  - repo: https://github.com/snakemake/snakefmt
+    rev: v0.10.2
+    hooks:
+      - id: snakefmt
+
+  # ── Shared project/sh/snakemake policy hooks ───────────────────────────────
+  # make_igv_genome.sh's own local policy checks (shebang, --help/--version,
+  # metadata) are already enforced by its bats suite / audited in
+  # bash_scripts/make_IGV_genome's own pre-commit config; only project-wide
+  # and snakemake-specific hooks apply here to avoid double-tracking.
+  - repo: https://github.com/Marc-commits/pre-commit-hooks
+    rev: v0.3.3
+    hooks:
+      - id: validate-config
+      - id: snakemake-lint
+      - id: conda-env-validate
+      - id: snakemake-rulegraph
+      - id: snakedeploy-pin-conda-envs
+      - id: readme-no-local-paths
+      - id: readme-url-check

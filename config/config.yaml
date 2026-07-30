@@ -1,0 +1,10 @@
+---
+# Example/default config for standalone runs of this module.
+# Consuming workflows normally pass an equivalent flat dict via the
+# Snakemake `module: config:` block instead of this file.
+
+fasta: tests/input/mini.fasta
+genefile: tests/input/mini.gff
+genome_id: mini
+genome_name: mini
+output: results/mini.genome

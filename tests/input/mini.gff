@@ -1,0 +1,3 @@
+#gff-version3
+NC_003272.1	test	gene	1	40	.	+	0	ID=gene1;Name=gene1
+NC_003276.1	test	gene	1	30	.	+	0	ID=gene2;Name=gene2

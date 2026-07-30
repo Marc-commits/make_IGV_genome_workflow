@@ -1,0 +1,10 @@
+---
+name: igv_genome
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.11
+  - samtools>=1.20
+  - zip
+  - unzip
