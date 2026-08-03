@@ -1,3 +1,4 @@
+import json
 import shutil
 import sys
 import tempfile
@@ -10,11 +11,10 @@ RULE = "make_igv_genome"
 data_path = Path(__file__).parent / RULE / "data"
 SNAKEFILE = Path(__file__).parent.parent.parent / "Snakefile"
 
-# The .genome archive is a zip (non-deterministic byte-for-byte across runs
-# due to zip's own timestamp/order metadata), so this checks archive
-# contents rather than a byte-identical expected fixture -- same pragmatic
-# approach used for the binary bowtie2 index in the sibling
-# bowtie2_build_index_workflow module.
+# The JSON descriptor is a deterministic, human-readable text file (unlike
+# the old zip archive, which carried non-deterministic timestamp/order
+# metadata), so this checks descriptor content directly via json.loads
+# rather than shelling out to inspect an archive.
 
 
 def test_make_igv_genome(conda_prefix):
@@ -25,7 +25,7 @@ def test_make_igv_genome(conda_prefix):
         check_output(
             [
                 "snakemake",
-                "results/mini.genome",
+                "results/mini.json",
                 "--snakefile",
                 str(SNAKEFILE),
                 "--forceall",
@@ -44,20 +44,18 @@ def test_make_igv_genome(conda_prefix):
             ]
             + conda_prefix
         )
-        genome = workdir / "results" / "mini.genome"
+        genome = workdir / "results" / "mini.json"
         assert genome.exists()
 
-        listing = check_output(["unzip", "-l", str(genome)], text=True)
-        assert "property.txt" in listing
-        assert "mini.fasta" in listing
-        assert "mini.fasta.fai" in listing
-        assert "mini.gff" in listing
+        descriptor = json.loads(genome.read_text())
+        assert descriptor["id"] == "MiniGenome"
+        assert descriptor["name"] == "Mini Genome"
+        assert descriptor["fastaURL"] == "../mini.fasta"
+        assert descriptor["indexURL"] == "../mini.fasta.fai"
+        assert descriptor["tracks"][0]["name"] == "Genes"
+        assert descriptor["tracks"][0]["url"] == "../mini.gff"
+        assert descriptor["tracks"][0]["format"] == "gff"
+        assert descriptor["tracks"][0]["indexed"] is False
 
-        properties = check_output(["unzip", "-p", str(genome), "property.txt"], text=True)
-        assert "id=MiniGenome" in properties
-        assert "name=Mini Genome" in properties
-        assert "geneFile=mini.gff" in properties
-        assert "sequenceLocation=mini.fasta" in properties
-
-        integrity = check_output(["unzip", "-t", str(genome)], text=True)
-        assert "No errors detected" in integrity
+        assert (workdir / "mini.fasta.fai").exists()
+        assert not (workdir / "results" / "mini.fasta").exists()
