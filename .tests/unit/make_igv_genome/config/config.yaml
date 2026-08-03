@@ -3,4 +3,4 @@ fasta: mini.fasta
 genefile: mini.gff
 genome_id: MiniGenome
 genome_name: Mini Genome
-output: results/mini.genome
+output: results/mini.json

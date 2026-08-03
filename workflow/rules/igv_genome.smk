@@ -3,7 +3,8 @@ rule make_igv_genome:
         fasta=config["fasta"],
         genefile=config["genefile"],
     output:
-        genome=config["output"],
+        json=config["output"],
+        fai=f'{config["fasta"]}.fai',
     params:
         genome_id=config["genome_id"],
         genome_name=config["genome_name"],
@@ -22,5 +23,5 @@ rule make_igv_genome:
         # invoked via `bash` rather than executed directly: workflow.source_path
         # copies the script into Snakemake's source cache without preserving
         # the executable bit
-        "bash {params.script} -f {input.fasta} -g {input.genefile} -o {output.genome} "
+        "bash {params.script} -f {input.fasta} -g {input.genefile} -o {output.json} "
         "--id {params.genome_id:q} --name {params.genome_name:q} --force &> {log}"

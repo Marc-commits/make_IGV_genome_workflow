@@ -1,9 +1,6 @@
 #!/usr/bin/env bats
 #
 # Run with: bats tests/make_igv_genome.bats
-#
-# Ported unchanged from bash_scripts/make_IGV_genome/test/make_igv_genome.bats
-# (commit 8c2a815) against the vendored copy of the script in this repo.
 
 setup() {
 	TEST_DIR="$(cd "$(dirname "${BATS_TEST_FILENAME}")" && pwd)"
@@ -13,11 +10,11 @@ setup() {
 	mkdir -p "${OUTPUT_DIR}"
 	FASTA="${INPUT_DIR}/mini.fasta"
 	GENEFILE="${INPUT_DIR}/mini.gff"
-	OUTPUT="${OUTPUT_DIR}/mini.genome"
+	OUTPUT="${OUTPUT_DIR}/mini.json"
 }
 
 teardown() {
-	rm -f "${OUTPUT_DIR}"/*.genome "${INPUT_DIR}"/*.fai
+	rm -f "${OUTPUT_DIR}"/*.json "${INPUT_DIR}"/*.fai
 }
 
 @test "--help prints usage and exits 0" {
@@ -44,31 +41,40 @@ teardown() {
 	[[ "$output" == *"fasta file not found"* ]]
 }
 
-@test "builds a valid .genome archive from fasta + gff" {
+@test "builds a valid JSON genome descriptor from fasta + gff" {
 	run "${SCRIPT}" -f "${FASTA}" -g "${GENEFILE}" -o "${OUTPUT}" --id MiniGenome --name "Mini Genome"
 	[ "$status" -eq 0 ]
 	[ -f "${OUTPUT}" ]
+	[ -f "${FASTA}.fai" ]
 
-	run unzip -l "${OUTPUT}"
+	run python3 -c "
+import json
+d = json.load(open('${OUTPUT}'))
+assert d['id'] == 'MiniGenome', d
+assert d['name'] == 'Mini Genome', d
+assert d['fastaURL'] == '../input/mini.fasta', d
+assert d['indexURL'] == '../input/mini.fasta.fai', d
+assert d['tracks'][0]['name'] == 'Genes', d
+assert d['tracks'][0]['url'] == '../input/mini.gff', d
+assert d['tracks'][0]['format'] == 'gff', d
+assert d['tracks'][0]['indexed'] is False, d
+print('ok')
+"
 	[ "$status" -eq 0 ]
-	[[ "$output" == *"property.txt"* ]]
-	[[ "$output" == *"mini.fasta"* ]]
-	[[ "$output" == *"mini.fasta.fai"* ]]
-	[[ "$output" == *"mini.gff"* ]]
-
-	run unzip -p "${OUTPUT}" property.txt
-	[ "$status" -eq 0 ]
-	[[ "$output" == *"id=MiniGenome"* ]]
-	[[ "$output" == *"name=Mini Genome"* ]]
-	[[ "$output" == *"geneFile=mini.gff"* ]]
-	[[ "$output" == *"sequenceLocation=mini.fasta"* ]]
+	[[ "$output" == *"ok"* ]]
 }
 
-@test "archive passes zip integrity check" {
+@test "output is syntactically valid JSON" {
 	"${SCRIPT}" -f "${FASTA}" -g "${GENEFILE}" -o "${OUTPUT}"
-	run unzip -t "${OUTPUT}"
+	run python3 -c "import json; json.load(open('${OUTPUT}'))"
 	[ "$status" -eq 0 ]
-	[[ "$output" == *"No errors detected"* ]]
+}
+
+@test "does not copy fasta/genefile bytes next to the output" {
+	run "${SCRIPT}" -f "${FASTA}" -g "${GENEFILE}" -o "${OUTPUT}"
+	[ "$status" -eq 0 ]
+	[ ! -f "${OUTPUT_DIR}/mini.fasta" ]
+	[ ! -f "${OUTPUT_DIR}/mini.gff" ]
 }
 
 @test "refuses to overwrite an existing output without --force" {
@@ -86,19 +92,36 @@ teardown() {
 
 @test "--fai reuses a pre-existing index instead of regenerating it" {
 	samtools faidx "${FASTA}"
+	ORIGINAL_MTIME="$(stat -c %Y "${FASTA}.fai")"
+	sleep 1
 	run "${SCRIPT}" -f "${FASTA}" -g "${GENEFILE}" -o "${OUTPUT}" --fai "${FASTA}.fai"
 	[ "$status" -eq 0 ]
 
-	run unzip -p "${OUTPUT}" mini.fasta.fai
+	NEW_MTIME="$(stat -c %Y "${FASTA}.fai")"
+	[ "${ORIGINAL_MTIME}" -eq "${NEW_MTIME}" ]
+
+	run python3 -c "
+import json, os
+d = json.load(open('${OUTPUT}'))
+resolved = os.path.normpath(os.path.join(os.path.dirname('${OUTPUT}'), d['indexURL']))
+assert os.path.samefile(resolved, '${FASTA}.fai'), (resolved, '${FASTA}.fai')
+print('ok')
+"
 	[ "$status" -eq 0 ]
-	diff <(echo "$output") "${FASTA}.fai"
+	[[ "$output" == *"ok"* ]]
 }
 
 @test "default id/name derive from the output filename" {
 	run "${SCRIPT}" -f "${FASTA}" -g "${GENEFILE}" -o "${OUTPUT}"
 	[ "$status" -eq 0 ]
 
-	run unzip -p "${OUTPUT}" property.txt
-	[[ "$output" == *"id=mini"* ]]
-	[[ "$output" == *"name=mini"* ]]
+	run python3 -c "
+import json
+d = json.load(open('${OUTPUT}'))
+assert d['id'] == 'mini', d
+assert d['name'] == 'mini', d
+print('ok')
+"
+	[ "$status" -eq 0 ]
+	[[ "$output" == *"ok"* ]]
 }

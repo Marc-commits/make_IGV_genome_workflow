@@ -7,4 +7,4 @@ fasta: tests/input/mini.fasta
 genefile: tests/input/mini.gff
 genome_id: mini
 genome_name: mini
-output: results/mini.genome
+output: results/mini.json
