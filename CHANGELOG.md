@@ -7,6 +7,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added (Unreleased)
 
+- `justfile`: added `env:`/`lint:` recipes to dry-run validate
+  `workflow/envs/*.yaml` conda envs and lint the Snakemake workflow.
 - `justfile`: added a `version-map:` recipe to (re)generate
   `.version-map` via `grep` over tracked files.
 
