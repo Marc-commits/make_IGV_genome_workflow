@@ -32,6 +32,13 @@ teardown() {
 	[[ "$output" == *"make_igv_genome.sh v"* ]]
 }
 
+@test "--tldr prints condensed examples and exits 0" {
+	run "${SCRIPT}" --tldr
+	[ "$status" -eq 0 ]
+	[ -n "$output" ]
+	[[ "$output" == *"make_igv_genome.sh"* ]]
+}
+
 @test "missing required arguments fails with a clear error" {
 	run "${SCRIPT}" -f "${FASTA}"
 	[ "$status" -ne 0 ]

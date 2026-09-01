@@ -4,7 +4,7 @@
   back into this vendored copy (or switch to a git submodule of that repo
   instead of vendoring, if it starts changing often).
 
-- [ ] Add `--tldr` to: `make_igv_genome.sh`. New pre-commit-hooks v0.4.0 hooks
+- [x] Add `--tldr` to: `make_igv_genome.sh`. New pre-commit-hooks v0.4.0 hooks
   (`{r-script,py,sh}-tldr`) require each script to exit 0 and print non-empty
   output on `--tldr`: a tldr-pages-style summary (imperative one-liner + ~5
   example invocations using literal example values, colored to match `tldr

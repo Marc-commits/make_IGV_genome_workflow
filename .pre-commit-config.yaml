@@ -67,8 +67,10 @@ repos:
   # metadata) are already enforced by its bats suite / audited in
   # bash_scripts/make_IGV_genome's own pre-commit config; only project-wide
   # and snakemake-specific hooks apply here to avoid double-tracking.
+  # Exception: sh-tldr is tracked here because the vendored copy carries the
+  # --tldr addition locally until it is synced back upstream.
   - repo: https://github.com/Marc-commits/pre-commit-hooks
-    rev: v0.3.3
+    rev: v0.4.0
     hooks:
       - id: validate-config
       - id: snakemake-lint
@@ -77,3 +79,4 @@ repos:
       - id: snakedeploy-pin-conda-envs
       - id: readme-no-local-paths
       - id: readme-url-check
+      - id: sh-tldr

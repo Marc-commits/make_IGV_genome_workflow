@@ -10,8 +10,10 @@
 `bash_scripts/make_IGV_genome/make_igv_genome.sh` (commit `8c2a815`) — a
 standalone, already-tested CLI tool — rather than reimplemented, since it
 already handles several non-obvious correctness requirements (see below).
-Logic is identical to the source; only this module's Snakemake rule wrapper
-around it is new.
+Logic is identical to the source; the only local edits are this module's
+Snakemake rule wrapper and a `--tldr` summary flag (help text only, added
+for pre-commit-hooks v0.4.0's `sh-tldr` hook) — a divergence from commit
+`8c2a815` pending sync back upstream. No data transformation changed.
 
 **Inputs** (CLI flags, wired from `snakemake.input`/`.params` by the
 Snakemake rule): `-f/--fasta`, `-g/--genefile`, `-o/--output`, `-i/--id`,

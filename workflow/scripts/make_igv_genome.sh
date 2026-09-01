@@ -7,7 +7,9 @@
 # Email:   marc.broghammer@gmx.de
 #
 # Vendored from bash_scripts/make_IGV_genome (commit 8c2a815) and wrapped in
-# a Snakemake rule for this module -- logic unchanged from the source.
+# a Snakemake rule for this module. The only local change is a --tldr summary
+# flag (for pre-commit-hooks v0.4.0's sh-tldr hook), to be synced back
+# upstream -- build logic unchanged from the source.
 #
 # Idempotent, side-effect-free: reads only the inputs given, writes only the
 # requested output file (never overwrites without --force).
@@ -42,6 +44,7 @@ Options:
       --keep-tmp         Do not delete the staging directory (prints its path)
   -h, --help             Show this help and exit
   -v, --version, -V     Show version and exit
+      --tldr             Show condensed tldr-style usage examples and exit
 
 Example:
   ${SCRIPT_NAME} -f genome.fasta -g genes.gff -o MyGenome.genome \\
@@ -54,6 +57,37 @@ Notes:
   - The archive is verified after creation (zip integrity + declared vs
     actual entry sizes) before being placed at OUTPUT.
 EOF
+}
+
+print_tldr() {
+	local d='' c='' a='' r=''
+	if [[ -t 1 ]]; then
+		d=$'\e[32m' c=$'\e[36m' a=$'\e[4;36m' r=$'\e[0m'
+	fi
+	tldr_ex() {
+		printf '\n  %s%s%s\n\n      ' "${d}" "$1" "${r}"
+		shift
+		for tok in "$@"; do
+			if [[ "${tok}" == @* ]]; then
+				printf '%s%s%s ' "${a}" "${tok#@}" "${r}"
+			else
+				printf '%s%s%s ' "${c}" "${tok}" "${r}"
+			fi
+		done
+		printf '\n'
+	}
+	printf '  %s%s%s\n' "${d}" \
+		"${SCRIPT_NAME}: build an IGV .genome archive (zip) from a FASTA + gene annotation file" "${r}"
+	tldr_ex "Build a .genome archive from a FASTA and a gene file:" \
+		"${SCRIPT_NAME}" -f @genome.fasta -g @genes.gff -o @MyGenome.genome
+	tldr_ex "Set the genome id and display name:" \
+		"${SCRIPT_NAME}" -f @genome.fasta -g @genes.gff -o @MyGenome.genome --id @MyGenome --name @"My Organism"
+	tldr_ex "Reuse an existing .fai index instead of generating one:" \
+		"${SCRIPT_NAME}" -f @genome.fasta -g @genes.gff -o @out.genome --fai @genome.fasta.fai
+	tldr_ex "Overwrite an existing output archive:" \
+		"${SCRIPT_NAME}" -f @genome.fasta -g @genes.gff -o @out.genome --force
+	tldr_ex "Keep the staging directory for inspection:" \
+		"${SCRIPT_NAME}" -f @genome.fasta -g @genes.gff -o @out.genome --keep-tmp
 }
 
 die() {
@@ -114,6 +148,10 @@ while [[ $# -gt 0 ]]; do
 		;;
 	-v | --version | -V)
 		echo "${SCRIPT_NAME} v${VERSION}"
+		exit 0
+		;;
+	--tldr)
+		print_tldr
 		exit 0
 		;;
 	*) die "unknown argument: $1 (see --help)" ;;
