@@ -3,6 +3,9 @@
 - Consider syncing future fixes to `bash_scripts/make_IGV_genome/make_igv_genome.sh`
   back into this vendored copy (or switch to a git submodule of that repo
   instead of vendoring, if it starts changing often).
+  This sync-back is already outstanding, not hypothetical: the vendored copy
+  diverges from source commit `8c2a815` by the local `--tldr` flag.
+  `workflow/scripts/make_igv_genome_README.md:15`
 
 - [x] Add `--tldr` to: `make_igv_genome.sh`. New pre-commit-hooks v0.4.0 hooks
   (`{r-script,py,sh}-tldr`) require each script to exit 0 and print non-empty
