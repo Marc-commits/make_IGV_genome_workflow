@@ -1,5 +1,13 @@
 # TODOs
 
+- `snakefmt` reorder needed (2026-09-19 audit): `log:`/`benchmark:`/`conda:`
+  before `params:` in `workflow/rules/igv_genome.smk`; `default_target:` before
+  the docstring in `Snakefile`. Fix: `snakefmt Snakefile workflow/rules/igv_genome.smk`.
+- (optional, low priority) embed `workflow/rulegraph.svg` in `README.md`.
+- (optional, low priority) add per-key inline comments to `config/config.yaml`,
+  or a `config/example.config.yaml`, if this module gains more config keys or
+  wider external consumers.
+
 - Consider syncing future fixes to `bash_scripts/make_IGV_genome/make_igv_genome.sh`
   back into this vendored copy (or switch to a git submodule of that repo
   instead of vendoring, if it starts changing often).
