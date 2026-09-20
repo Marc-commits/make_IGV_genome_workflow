@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Added (Unreleased)
+
+- Added .github/workflows/pre-commit.yml: runs `uvx pre-commit run
+  --all-files` on `runs-on: self-hosted` for every pull request.
+
 ## [0.1.1] - 2026-09-01
 
 ### Added in 0.1.1

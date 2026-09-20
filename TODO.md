@@ -28,3 +28,7 @@
   done). Also bump this repo's `.pre-commit-config.yaml`
   Marc-commits/pre-commit-hooks `rev` to `v0.4.0` and add the matching `*-tldr`
   hook id(s).
+
+- [ ] Confirm a self-hosted runner labeled 'self-hosted' is registered and
+      that this repo's first PR exercises .github/workflows/pre-commit.yml
+      end-to-end.
