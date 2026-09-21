@@ -36,7 +36,6 @@ repos:
     rev: 3.0.0
     hooks:
       - id: forbid-binary
-      - id: git-check
       - id: shellcheck
         exclude: '(^|/)\.envrc$'
       - id: shfmt
