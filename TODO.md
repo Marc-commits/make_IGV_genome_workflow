@@ -28,3 +28,7 @@
   done). Also bump this repo's `.pre-commit-config.yaml`
   Marc-commits/pre-commit-hooks `rev` to `v0.4.0` and add the matching `*-tldr`
   hook id(s).
+
+- [ ] Hook audit 2026-11-02: executable scripts (r=0 py=0 sh=1) lack hook ids
+  `sh-bash-shebang`, `sh-usage-banner`, `sh-strict-mode`, `sh-help-version`,
+  `sh-metadata`; hooks pinned at v0.4.0 (latest v0.8.0).
