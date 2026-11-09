@@ -27,3 +27,7 @@ lint: dry
 fmt:
     snakefmt Snakefile
     snakefmt workflow/rules/
+
+# regenerate workflow/rulegraph.svg
+chore:
+    PYTHONHASHSEED=0 snakemake --rulegraph --forceall 2>/dev/null | dot -Tsvg >workflow/rulegraph.svg

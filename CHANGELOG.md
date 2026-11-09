@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Changed (Unreleased)
+
+- Rulegraph regeneration moved from `.envrc` into the justfile recipe
+  `just chore`; direnv no longer rewrites `workflow/rulegraph.svg` on `cd`.
+
 ## [0.1.1] - 2026-09-01
 
 ### Added in 0.1.1
