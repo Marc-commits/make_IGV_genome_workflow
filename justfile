@@ -30,4 +30,6 @@ fmt:
 
 # regenerate workflow/rulegraph.svg
 chore:
-    PYTHONHASHSEED=0 snakemake --rulegraph --forceall 2>/dev/null | dot -Tsvg >workflow/rulegraph.svg
+    #!/usr/bin/env bash
+    set -euo pipefail
+    PYTHONHASHSEED=0 snakemake --rulegraph --forceall | dot -Tsvg >workflow/rulegraph.svg

@@ -5,6 +5,11 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- justfile rulegraph recipes no longer discard snakemake stderr and now fail
+  on pipeline errors (`pipefail`), so a failed rulegraph is reported.
+
 ### Changed (Unreleased)
 
 - Rulegraph regeneration moved from `.envrc` into the justfile recipe
