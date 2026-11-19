@@ -1,0 +1,38 @@
+---
+$schema: https://json-schema.org/draft/2020-12/schema
+description: Config schema for make_IGV_genome_workflow
+type: object
+required:
+  - fasta
+  - genefile
+  - genome_id
+  - genome_name
+  - output
+
+additionalProperties: false
+
+properties:
+  fasta:
+    type: string
+    description: Reference FASTA the IGV .genome archive is built from
+    minLength: 1
+
+  genefile:
+    type: string
+    description: Gene annotation file (GFF3) shown as the gene track
+    minLength: 1
+
+  genome_id:
+    type: string
+    description: IGV genome identifier
+    minLength: 1
+
+  genome_name:
+    type: string
+    description: Display name of the genome in IGV
+    minLength: 1
+
+  output:
+    type: string
+    description: Path of the .genome archive to create
+    minLength: 1

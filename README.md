@@ -22,6 +22,7 @@ snakemake --use-conda --latency-wait 30 make_igv_genome_workflow_all
 
 Edit `config/config.yaml` (`fasta`, `genefile`, `genome_id`, `genome_name`,
 `output`) first, or override via `--config`.
+The config is validated against `workflow/schemas/config.schema.yaml`.
 
 ## Usage as a Snakemake module (git submodule)
 

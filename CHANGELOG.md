@@ -5,6 +5,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added (Unreleased)
+
+- `workflow/schemas/config.schema.yaml` and a `validate()` call in the
+  `Snakefile`: the five required keys (`fasta`, `genefile`, `genome_id`,
+  `genome_name`, `output`) are checked at parse time, also when used as a
+  module.
+
 ### Fixed
 
 - justfile rulegraph recipes no longer discard snakemake stderr and now fail

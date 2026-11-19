@@ -1,4 +1,10 @@
+from snakemake.utils import validate
+
+
 configfile: "config/config.yaml"
+
+
+validate(config, workflow.source_path("workflow/schemas/config.schema.yaml"))
 
 
 include: "workflow/rules/igv_genome.smk"
