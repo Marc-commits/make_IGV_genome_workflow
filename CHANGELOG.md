@@ -5,7 +5,9 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-### Added (Unreleased)
+## [0.3.0] - 2026-11-20
+
+### Added in 0.3.0
 
 - `workflow/schemas/config.schema.yaml` and a `validate()` call in the
   `Snakefile`: the five required keys (`fasta`, `genefile`, `genome_id`,
@@ -17,7 +19,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - justfile rulegraph recipes no longer discard snakemake stderr and now fail
   on pipeline errors (`pipefail`), so a failed rulegraph is reported.
 
-### Changed (Unreleased)
+### Changed in 0.3.0
 
 - Rulegraph regeneration moved from `.envrc` into the justfile recipe
   `just chore`; direnv no longer rewrites `workflow/rulegraph.svg` on `cd`.
