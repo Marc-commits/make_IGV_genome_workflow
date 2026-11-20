@@ -69,7 +69,7 @@ repos:
   # Exception: sh-tldr is tracked here because the vendored copy carries the
   # --tldr addition locally until it is synced back upstream.
   - repo: https://github.com/Marc-commits/pre-commit-hooks
-    rev: v0.10.0
+    rev: v0.11.0
     hooks:
       - id: validate-config
       - id: snakemake-lint

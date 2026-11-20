@@ -10,6 +10,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `.pre-commit-config.yaml`: `Marc-commits/pre-commit-hooks` bumped from v0.4.0
   to v0.10.0; new `snakemake-config-validate` hook validates the config files
   against `workflow/schemas/config.schema.yaml` at commit time.
+- Bumped pre-commit-hooks to v0.11.0: `snakedeploy-pin-conda-envs` is now
+  manual-stage only (no pin drift on commits); run `just pin-env`.
 
 ### Added (Unreleased)
 
