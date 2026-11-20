@@ -17,12 +17,17 @@ pre-commit:
 pin-env: env
     snakedeploy pin-conda-envs workflow/envs/*.yaml
 
-lint: dry
+lint: dry config-validation
     snakemake --lint
     pre-commit run readme-no-local-paths --files README.md
     pre-commit run readme-url-check --files README.md
     snakefmt --check Snakefile
     snakefmt --check workflow/rules/
+
+# validate config files against workflow/schemas/config.schema.yaml (static, no snakemake)
+config-validation:
+    uvx check-jsonschema --schemafile workflow/schemas/config.schema.yaml \
+    config/config.yaml
 
 fmt:
     snakefmt Snakefile

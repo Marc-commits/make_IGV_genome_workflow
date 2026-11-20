@@ -5,6 +5,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added (Unreleased)
+
+- `just config-validation` (also a dependency of `just lint`): validates
+  `config/config.yaml` against `workflow/schemas/config.schema.yaml` with
+  `check-jsonschema` (via `uvx`), reporting all errors at once without parsing
+  the workflow.
+
 ## [0.3.0] - 2026-11-20
 
 ### Added in 0.3.0
