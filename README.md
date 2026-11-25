@@ -1,18 +1,14 @@
 # make_IGV_genome_workflow
 
 A small Snakemake module: build an IGV `.genome` archive from a FASTA +
-gene annotation file (GFF/GFF3/GTF/BED). Wraps
-`bash_scripts/make_IGV_genome/make_igv_genome.sh` (a private internal repo)
-in a Snakemake rule; the script is vendored unchanged as
-`workflow/scripts/make_igv_genome.sh` and the underlying logic is
-unchanged from that already-tested standalone script.
+gene annotation file (GFF/GFF3/GTF/BED), wrapped in a single Snakemake rule.
 
 ## What it does
 
-`make_igv_genome` — runs the vendored script to assemble a `.genome` zip
-archive: FASTA + `.fai` index (generated via `samtools faidx`) + gene file +
-a correctly-named `property.txt` descriptor, verified for zip integrity and
-per-entry size correctness before being written to the requested output.
+`make_igv_genome` — assembles a `.genome` zip archive: FASTA + `.fai` index
+(generated via `samtools faidx`) + gene file + a correctly-named
+`property.txt` descriptor, verified for zip integrity and per-entry size
+correctness before being written to the requested output.
 
 ## Usage as a standalone workflow
 
@@ -43,11 +39,3 @@ module igv:
 
 use rule * from igv as igv_*
 ```
-
-## Tests
-
-- `tests/make_igv_genome.bats` — ported unchanged from the source script's
-  own bats suite, run directly against the vendored copy
-  (`bats tests/make_igv_genome.bats`).
-- `.tests/unit/` — Snakemake rule-level integration test
-  (`pytest .tests/unit`).
