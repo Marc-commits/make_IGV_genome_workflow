@@ -80,3 +80,8 @@ repos:
       - id: readme-no-local-paths
       - id: readme-url-check
       - id: sh-tldr
+
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.12
+    hooks:
+      - id: actionlint

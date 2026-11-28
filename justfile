@@ -11,6 +11,10 @@ env:
 dry:
     snakemake -n --configfile config/config.yaml
 
+# run .github/workflows/ci.yml locally in a container (gh act)
+ci_local:
+    gh act workflow_dispatch -W .github/workflows/ci.yml
+
 pre-commit:
     pre-commit run --all-files
 
